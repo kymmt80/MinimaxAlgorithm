@@ -13,5 +13,8 @@ def simulateMove(piece, move, board, game, skip):
     # Your Code Goes Here
 
 def getAllMoves(board, color, game):
-    pass
-    # Your Code Goes Here
+    moves=[];
+    pieces=board.getAllPieces(color)
+    for piece in pieces:
+        moves.append((piece,board.getValidMoves(piece)))
+    return moves
