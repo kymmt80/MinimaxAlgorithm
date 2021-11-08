@@ -1,12 +1,13 @@
 import pygame
+from checkers.board import Board
 from checkers.constants import WIDTH, HEIGHT, SQUARE_SIZE, RED, WHITE
 from checkers.game import Game
-from minimax.minimax import minimax
-
+from minimax.minimax import getAllMoves, minimax
+from checkers.pieces import Piece
 FPS = 60
 
-WHITE_DEPTH = 3
-RED_DEPTH = 3
+WHITE_DEPTH = 1
+RED_DEPTH = 1
 
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Checkers')
@@ -26,16 +27,18 @@ if __name__ == '__main__':
         clock.tick(FPS)
 
         if game.turn == WHITE:
+            print("White!")
             value, newBoard = minimax(game.getBoard(), WHITE_DEPTH, True, game)
+            game.aiMove(newBoard)
+            print("turn over!")
+        elif game.turn == RED:
+            print("Red!")
+            value, newBoard = minimax(game.getBoard(), RED_DEPTH, False, game)
             game.aiMove(newBoard)
 
         if game.winner() != None:
             print(game.winner())
             run = False
-
-        if game.turn == RED:
-            value, newBoard = minimax(game.getBoard(), RED_DEPTH, False, game)
-            game.aiMove(newBoard)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

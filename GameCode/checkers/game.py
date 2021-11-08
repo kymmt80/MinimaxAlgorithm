@@ -10,6 +10,8 @@ class Game:
 
     def update(self):
         self.board.draw(self.win)
+        for _ in range(100000000):
+            pass
         pygame.display.update()
 
     def _init(self):

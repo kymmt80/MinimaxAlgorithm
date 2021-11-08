@@ -1,3 +1,5 @@
+from copy import deepcopy
+from typing import Collection
 import pygame
 from .constants import BLACK, ROWS, RED, SQUARE_SIZE, COLS, WHITE
 from .pieces import Piece
@@ -80,9 +82,46 @@ class Board:
         
         return None 
     
-    def getValidMoves(self, piece):
-        pass
-        # Your Code Goes Here
+    def getValidMoves(self, piece,skipped=[]):
+        print("*",piece.color,piece.row,piece.col)
+        print("*",skipped)
+        validMoves=[]
+        if(piece.color==RED):
+            a=-1
+        else:
+            a=1
+        moves={(1,1),(1,-1),(-1,-1),(-1,1)}
+        kingMoves={(-1,-1),(-1,1)}
+        for move in moves:
+            move_skipped=[]
+            x,y=piece.row,piece.col
+            x+=a*move[0]
+            y+=a*move[1]
+            if(y<0 or y>=COLS or x>=ROWS or x<0):
+                continue
+            if(move in kingMoves) and not piece.king:
+                continue
+            if self.board[x][y]==0:
+                if len(skipped)==0:
+                    validMoves.append((x,y,[]))
+                else:
+                    continue
+            elif self.board[x][y].color!=piece.color and not (y+a*move[1]<0 or y+a*move[1]>=COLS or x+a*move[0]>=ROWS or x+a*move[0]<0):
+                if self.board[x+a*move[0]][y+a*move[1]]==0:
+                    if True in ((skip.row==x and skip.col==y) for skip in skipped):
+                       continue
+                    move_skipped.append(self.getPiece(x,y))
+                    validMoves.append((x+move[0]*a,y+move[1]*a,skipped+move_skipped))
+                    simPiece=Piece(x+move[0]*a,y+move[1]*a,piece.color)
+                    simPiece.king=piece.king
+                    print(piece.color,piece.row,piece.col,"before:",validMoves)
+                    validMoves=validMoves+self.getValidMoves(simPiece,skipped+move_skipped)
+                    #print(piece.color,piece.row,piece.col,"after:",validMoves)
+            print(piece.color,piece.row,piece.col)
+            print(validMoves)
+        return validMoves
+        
+
 
     def _traverseLeft(self, start, stop, step, color, left, skipped=[]):
         moves = {}
