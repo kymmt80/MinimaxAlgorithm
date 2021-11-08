@@ -9,6 +9,8 @@ WHITE = (255,255,255)
 def minimax(position, depth, maxPlayer, game):
     if depth==0:
         return position.evaluate(),position
+    if position.winner():
+        return position.evaluate(),position
     if maxPlayer:
         color=WHITE
     else:
@@ -22,14 +24,18 @@ def minimax(position, depth, maxPlayer, game):
             newPosition=simulateMove(deepcopy(piece),move,deepcopy(position),game)
             #print(move,piece.row,piece.col)
             val,_=minimax(newPosition,depth-1,not maxPlayer,game)
+            if game.hasSeen(newPosition):
+                continue
             moveVal[newPosition]=val
+    if len(moveVal)==0:
+            return position.evaluate(),position
     if maxPlayer:
         maxKey=max(moveVal,key=moveVal.get)
-        print(moveVal[maxKey])
+        #print(moveVal[maxKey])
         return moveVal[maxKey],maxKey
     else:
         minKey=min(moveVal,key=moveVal.get)
-        print(moveVal[minKey])
+        #print(moveVal[minKey])
         return moveVal[minKey],minKey
 
 def simulateMove(piece, move, board, game, skip=[]):
@@ -47,5 +53,5 @@ def getAllMoves(board, color, game=0):
         pieceMoves=board.getValidMoves(piece)
         if(len(pieceMoves)>0):
             moves.append((piece,pieceMoves))
-    print(moves)
+    #print(moves)
     return moves

@@ -19,7 +19,7 @@ class Board:
                 pygame.draw.rect(win, RED, (row*SQUARE_SIZE, col *SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
 
     def evaluate(self):
-        return self.whiteLeft - self.redLeft + (self.whiteKings * 0.5 - self.redKings * 0.5)
+        return self.whiteLeft - self.redLeft + (self.whiteKings * 2 - self.redKings * 2)
 
     def getAllPieces(self, color):
         pieces = []
@@ -83,8 +83,8 @@ class Board:
         return None 
     
     def getValidMoves(self, piece,skipped=[]):
-        print("*",piece.color,piece.row,piece.col)
-        print("*",skipped)
+        #print("*",piece.color,piece.row,piece.col)
+        #print("*",skipped)
         validMoves=[]
         if(piece.color==RED):
             a=-1
@@ -114,11 +114,11 @@ class Board:
                     validMoves.append((x+move[0]*a,y+move[1]*a,skipped+move_skipped))
                     simPiece=Piece(x+move[0]*a,y+move[1]*a,piece.color)
                     simPiece.king=piece.king
-                    print(piece.color,piece.row,piece.col,"before:",validMoves)
+                    #print(piece.color,piece.row,piece.col,"before:",validMoves)
                     validMoves=validMoves+self.getValidMoves(simPiece,skipped+move_skipped)
                     #print(piece.color,piece.row,piece.col,"after:",validMoves)
-            print(piece.color,piece.row,piece.col)
-            print(validMoves)
+            #print(piece.color,piece.row,piece.col)
+            #print(validMoves)
         return validMoves
         
 
